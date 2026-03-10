@@ -80,7 +80,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Priority", "Value": "High"},
                 {"Field": "Order ID", "Value": "UE-ORD-9947201"}
             ]
-        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/screenshots/sf_case_queue.png" }]
+        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/recordings/sf_dispute_queue.webm" }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
     await delay(2000);
@@ -110,7 +110,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Prior Disputes (90 days)", "Value": "2", "Policy Implication": "Both resolved in merchant's favor"},
                 {"Field": "Account Status", "Value": "Active — Good Standing", "Policy Implication": "No flags or warnings"}
             ]
-        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/screenshots/sf_merchant_profile.png" }]
+        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/recordings/sf_merchant_profile.webm" }]
     });
     await delay(1500);
 
@@ -138,7 +138,7 @@ const waitSignal = async (sid) => {
                 {"Item": "Chocolate Milkshake", "Price": "$5.00", "Status": "Claimed Missing"},
                 {"Item": "Total", "Price": "$24.50", "Status": "Full refund issued"}
             ]
-        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/screenshots/sf_order_details.png" }]
+        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/recordings/sf_order_details.webm" }]
     });
     await delay(1500);
 
@@ -167,7 +167,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Proof of Delivery", "Value": "Photo: sealed bag at door", "Assessment": "Bag sealed — items packed at restaurant"},
                 {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}
             ]
-        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/screenshots/sf_delivery_tracking.png" }]
+        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/recordings/sf_delivery_tracking.webm" }]
     });
     await delay(1500);
 
@@ -197,7 +197,7 @@ const waitSignal = async (sid) => {
                 {"Metric": "'Missing Items' Refunds", "Value": "8 of 12 (66%)", "Threshold": "3+ same type = Pattern", "Flag": "🚩 Pattern Detected"},
                 {"Metric": "Refunds Last 90 Days", "Value": "5 ($156.40)", "Threshold": "3+ = Pattern Fraud", "Flag": "🚩 EXCEEDS — 5 claims"}
             ]
-        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/screenshots/sf_customer_history.png" }]
+        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/recordings/sf_customer_history.webm" }]
     });
     await delay(1500);
 
@@ -225,7 +225,7 @@ const waitSignal = async (sid) => {
                 {"Element": "Customer Pattern Noted", "Detail": "Multiple prior missing-item claims", "Credibility Assessment": "Corroborated by customer risk data"},
                 {"Element": "Overall Credibility", "Detail": "HIGH", "Credibility Assessment": "Specific + photo + 97.2% accuracy"}
             ]
-        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/screenshots/sf_merchant_statement.png" }]
+        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/recordings/sf_merchant_statement.webm" }]
     });
     await delay(1500);
 
@@ -257,7 +257,7 @@ const waitSignal = async (sid) => {
                 {"Field": "90-Day Refund Total", "Value": "$156.40 (5 transactions)"},
                 {"Field": "Merchant Weekly Payout", "Value": "~$4,200"}
             ]
-        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/screenshots/stripe_payment.png" }]
+        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/recordings/stripe_payment.webm" }]
     });
     await delay(1500);
 

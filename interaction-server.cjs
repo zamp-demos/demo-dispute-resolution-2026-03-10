@@ -12,6 +12,8 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const FEEDBACK_QUEUE_PATH = path.join(PUBLIC_DIR, 'data', 'feedbackQueue.json');
 const KB_VERSIONS_PATH = path.join(PUBLIC_DIR, 'data', 'kbVersions.json');
 const KB_PATH = path.join(__dirname, 'src', 'data', 'knowledgeBase.md');
+const SF_V1_URL = 'https://salesforce-ubereats-demo.vercel.app';
+const SF_V2_URL = 'https://salesforce-ubereats-demo-v2.vercel.app';
 
 let state = { sent: false, confirmed: false, signals: {} };
 let runningProcesses = new Map();

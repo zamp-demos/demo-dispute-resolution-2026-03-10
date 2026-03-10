@@ -52,8 +52,25 @@ const server = http.createServer((req, res) => {
     Object.entries(corsHeaders).forEach(([k, v]) => res.setHeader(k, v));
 
     if (cleanPath === '/reset') {
+        const reqUrl = new URL(req.url, `http://${req.headers.host}`);
+        const portalVersion = reqUrl.searchParams.get('portal') || 'v1';
+        const targetSfUrl = portalVersion === 'v2' ? SF_V2_URL : SF_V1_URL;
+        const otherSfUrl = portalVersion === 'v2' ? SF_V1_URL : SF_V2_URL;
+
         state = { sent: false, confirmed: false, signals: {} };
         fs.writeFileSync(signalFile, JSON.stringify({ APPROVE_REVERSAL_001: false, REJECT_001: false, APPROVE_UPHOLD_002: false, REJECT_002: false, APPROVE_ESCALATE_003: false, REJECT_003: false }, null, 4));
+
+        // Swap SF URL in KB to match requested portal version
+        try {
+            let kb = fs.readFileSync(KB_PATH, 'utf8');
+            if (kb.includes(otherSfUrl)) {
+                kb = kb.replace(otherSfUrl, targetSfUrl);
+                fs.writeFileSync(KB_PATH, kb);
+                console.log(`[reset] KB updated: SF URL set to ${targetSfUrl}`);
+            } else if (kb.includes(targetSfUrl)) {
+                console.log(`[reset] KB already has correct SF URL: ${targetSfUrl}`);
+            }
+        } catch (e) { console.error('[reset] KB swap error:', e.message); }
 
         runningProcesses.forEach((proc) => {
             try { process.kill(-proc.pid, 'SIGKILL'); } catch(e) {}

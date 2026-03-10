@@ -338,6 +338,19 @@ const DashboardLayout = () => {
                         <button
                             onClick={async () => {
                                 try {
+                                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/reset?portal=v2`);
+                                } catch (err) {
+                                    console.error('Failed to rerun backend:', err);
+                                }
+                                window.location.reload();
+                            }}
+                            className="px-3 py-1.5 text-[11px] text-white bg-[#171717] hover:bg-[#333] rounded-md font-[550] border border-[#171717] shadow-sm ml-1 transition-colors"
+                        >
+                            Rerun
+                        </button>
+                        <button
+                            onClick={async () => {
+                                try {
                                     await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/reset`);
                                 } catch (err) {
                                     console.error('Failed to reset backend:', err);

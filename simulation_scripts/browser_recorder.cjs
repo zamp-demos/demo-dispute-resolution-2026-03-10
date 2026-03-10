@@ -74,7 +74,7 @@ async function recordSalesforce({ outputFile, caseNumber = null, tabLabel = null
         await page.waitForTimeout(500);
 
         // Fill login form
-        await page.fill('input[type="email"], input[placeholder*="email" i], input[name="email"]', email);
+        await page.fill('#username', email);
         await page.fill('input[type="password"]', password);
         await page.click('button[type="submit"], .login-btn, button:has-text("Log In"), button:has-text("Login")');
 
@@ -155,7 +155,7 @@ async function recordStripe({ outputFile, paymentId }) {
         await page.waitForTimeout(500);
 
         // Login
-        await page.fill('input[type="email"], input[placeholder*="email" i], input[name="email"]', email);
+        await page.fill('#username', email);
         await page.fill('input[type="password"]', password);
         await page.click('button[type="submit"], .login-btn, button:has-text("Log In"), button:has-text("Login")');
         await page.waitForTimeout(2000);

@@ -194,9 +194,9 @@ const DashboardLayout = () => {
                     >
                         <div className="flex items-center gap-2.5 font-[500]">
                             <div className="w-6 h-6 bg-[#ebebeb] rounded flex items-center justify-center text-black font-bold text-[11px]">
-                                L
+                                U
                             </div>
-                            <span>Lilly</span>
+                            <span>Uber</span>
                         </div>
                         <ChevronDown className={`w-3.5 h-3.5 text-[#c9c9c9] transition-transform duration-200 ${isAirbnbOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -230,7 +230,7 @@ const DashboardLayout = () => {
                                     <button onClick={() => navigate('/done/dispute-resolution')} className="hover:bg-white rounded p-1 transition-colors">
                                         <ArrowLeft className="w-3.5 h-3.5 text-[#171717]" />
                                     </button>
-                                    <span className="text-[#8f8f8f] font-normal">SOP Management /</span>
+                                    <span className="text-[#8f8f8f] font-normal">Dispute Resolution /</span>
                                     <span className="text-[#171717] font-bold">Knowledge Base</span>
                                 </>
                             ) : isProcessDetailPage ? (
@@ -238,12 +238,12 @@ const DashboardLayout = () => {
                                     <button onClick={() => navigate('/done/dispute-resolution')} className="hover:bg-white rounded p-1 transition-colors">
                                         <ArrowLeft className="w-3.5 h-3.5 text-[#171717]" />
                                     </button>
-                                    <span className="text-[#171717] font-[550]">SOP Management</span>
+                                    <span className="text-[#171717] font-[550]">Dispute Resolution</span>
                                     <ChevronRight className="w-3.5 h-3.5 text-[#c9c9c9]" />
                                     <span className="text-[#171717] font-[550]">Activity Logs</span>
                                 </>
                             ) : (
-                                <span className="text-[#171717] font-[550]">SOP Management</span>
+                                <span className="text-[#171717] font-[550]">Dispute Resolution</span>
                             )}
                         </div>
                     </div>

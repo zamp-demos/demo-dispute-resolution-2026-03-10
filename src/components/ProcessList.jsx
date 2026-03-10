@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filter, Check, Loader2, Search, SlidersHorizontal, Activity } from 'lucide-react';
 
-const ProcessList = ({ category = 'Data Integrity Review' }) => {
+const ProcessList = ({ category = 'Dispute Resolution' }) => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('Needs Attention');
     const [processes, setProcesses] = useState([]);
@@ -68,10 +68,10 @@ const ProcessList = ({ category = 'Data Integrity Review' }) => {
     };
 
     const columns = [
-        { label: 'Study ID', key: 'stockId' },
-        { label: 'Document Type', key: 'documentType' },
-        { label: 'Data Points', key: 'dataPoints' },
-        { label: 'Risk Level', key: 'riskLevel' }
+        { label: 'Case #', key: 'caseNumber' },
+        { label: 'Merchant', key: 'merchantName' },
+        { label: 'Amount', key: 'disputeAmount' },
+        { label: 'Priority', key: 'priority' }
     ];
 
     return (

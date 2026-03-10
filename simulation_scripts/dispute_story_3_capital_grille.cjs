@@ -86,7 +86,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Order ID", "Value": "UE-ORD-9958734"},
                 {"Field": "Customer", "Value": "Whitfield & Associates (Corporate)"}
             ]
-        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/recordings/sf_dispute_queue.webm" }]
+        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/recordings/s3_sf_dispute_queue.webm" }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
     await delay(2000);
@@ -118,7 +118,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Prior Disputes (90 days)", "Value": "2", "Policy Implication": "Both resolved in merchant's favor"},
                 {"Field": "Account Status", "Value": "Active — Excellent Standing", "Policy Implication": "No flags or concerns"}
             ]
-        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/recordings/sf_merchant_profile.webm" }]
+        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/recordings/s3_sf_merchant_profile.webm" }]
     });
     await delay(1500);
 
@@ -150,7 +150,7 @@ const waitSignal = async (signals) => {
                 {"Item": "Dessert Trio", "Price": "$41.00", "Status": "MISSING"},
                 {"Item": "Total", "Price": "$187.50", "Status": "2 missing ($79.50), 2 quality issues"}
             ]
-        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/recordings/sf_order_details.webm" }]
+        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/recordings/s3_sf_order_details.webm" }]
     });
     await delay(1500);
 
@@ -180,7 +180,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Driver Notes", "Value": "None provided", "Assessment": "No explanation for delay or stop"},
                 {"Field": "Temperature Impact", "Value": "33 min delay", "Assessment": "Likely caused food quality issues"}
             ]
-        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/recordings/sf_delivery_tracking.webm" }]
+        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/recordings/s3_sf_delivery_tracking.webm" }]
     });
     await delay(1500);
 
@@ -212,7 +212,7 @@ const waitSignal = async (signals) => {
                 {"Metric": "Refund Breakdown", "Value": "2 late, 1 quality, 1 missing", "Threshold": "3+ same type = Pattern", "Flag": "✅ No pattern — mixed"},
                 {"Metric": "Refunds Last 90 Days", "Value": "4 ($312.00)", "Threshold": "3+ = Pattern", "Flag": "⚠️ Count hits threshold but mixed types"}
             ]
-        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/recordings/sf_customer_history.webm" }]
+        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/recordings/s3_sf_customer_history.webm" }]
     });
     await delay(1500);
 
@@ -243,7 +243,7 @@ const waitSignal = async (signals) => {
                 {"Element": "Missing Items Location", "Detail": "2 platters remained on pickup shelf", "Credibility Assessment": "Accounts for missing items"},
                 {"Element": "Overall Credibility", "Detail": "VERY HIGH", "Credibility Assessment": "Specific + photo + 98.8% accuracy"}
             ]
-        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/recordings/sf_merchant_statement.webm" }]
+        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/recordings/s3_sf_merchant_statement.webm" }]
     });
     await delay(1500);
 
@@ -276,7 +276,7 @@ const waitSignal = async (signals) => {
                 {"Field": "90-Day Refund Total", "Value": "$312.00 (4 transactions)"},
                 {"Field": "Merchant Weekly Payout", "Value": "~$18,500"}
             ]
-        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/recordings/stripe_payment.webm" }]
+        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/recordings/s3_stripe_payment.webm" }]
     });
     await delay(1500);
 

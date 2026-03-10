@@ -80,7 +80,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Priority", "Value": "Medium"},
                 {"Field": "Order ID", "Value": "UE-ORD-9951482"}
             ]
-        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/screenshots/sf_case_queue.png" }]
+        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/recordings/sf_dispute_queue.webm" }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
     await delay(2000);
@@ -110,7 +110,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Prior Disputes (90 days)", "Value": "7 (3 wrong-order)", "Policy Implication": "High dispute volume, pattern"},
                 {"Field": "Account Status", "Value": "Active — Under Review", "Policy Implication": "Flagged for accuracy issues"}
             ]
-        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/screenshots/sf_merchant_profile.png" }]
+        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/recordings/sf_merchant_profile.webm" }]
     });
     await delay(1500);
 
@@ -139,7 +139,7 @@ const waitSignal = async (sid) => {
                 {"Ordered": "Horchata", "Price": "$4.25", "Received": "Horchata", "Match": "✅ Correct"},
                 {"Ordered": "Guac & Chips", "Price": "$8.00", "Received": "Queso & Chips", "Match": "❌ Wrong item"}
             ]
-        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/screenshots/sf_order_details.png" }]
+        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/recordings/sf_order_details.webm" }]
     });
     await delay(1500);
 
@@ -168,7 +168,7 @@ const waitSignal = async (sid) => {
                 {"Field": "Proof of Delivery", "Value": "Photo: sealed bag at door", "Assessment": "Confirms restaurant packed wrong order"},
                 {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}
             ]
-        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/screenshots/sf_delivery_tracking.png" }]
+        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/recordings/sf_delivery_tracking.webm" }]
     });
     await delay(1500);
 
@@ -199,7 +199,7 @@ const waitSignal = async (sid) => {
                 {"Metric": "Refunds Last 90 Days", "Value": "1 ($12.30)", "Threshold": "3+ = Pattern", "Flag": "✅ Clean"},
                 {"Metric": "Dietary Profile", "Value": "Vegetarian", "Threshold": "—", "Flag": "Received meat — food safety concern"}
             ]
-        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/screenshots/sf_customer_history.png" }]
+        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/recordings/sf_customer_history.webm" }]
     });
     await delay(1500);
 
@@ -228,7 +228,7 @@ const waitSignal = async (sid) => {
                 {"Element": "Explanation for Error", "Detail": "None offered", "Credibility Assessment": "No account of meat items sent"},
                 {"Element": "Overall Credibility", "Detail": "LOW", "Credibility Assessment": "Vague + no evidence + 88.5% accuracy + 3 prior wrong-order disputes"}
             ]
-        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/screenshots/sf_merchant_statement.png" }]
+        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/recordings/sf_merchant_statement.webm" }]
     });
     await delay(1500);
 
@@ -260,7 +260,7 @@ const waitSignal = async (sid) => {
                 {"Field": "90-Day Refund Total", "Value": "$12.30 (1 transaction)"},
                 {"Field": "Merchant Weekly Payout", "Value": "~$2,800"}
             ]
-        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/screenshots/stripe_payment_002.png" }]
+        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/recordings/stripe_payment.webm" }]
     });
     await delay(1500);
 

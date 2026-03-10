@@ -274,17 +274,17 @@ const server = http.createServer((req, res) => {
                 let updatedKB = currentKB;
 
                 // Detect URL changes in feedback summary — use deterministic find/replace
-                const urlPattern = /https?:\/\/[^\s"'<>]+/g;
+                const urlPattern = /https?:\/\/[^\s"'<>`]+/g;
                 const summaryUrls = (item.summary || '').match(urlPattern) || [];
                 const kbUrlLine = currentKB.split('\n').find(l => l.includes('Salesforce Portal URL'));
                 const kbUrlMatch = kbUrlLine ? kbUrlLine.match(urlPattern) : null;
                 const currentSfUrl = kbUrlMatch ? kbUrlMatch[0] : null;
 
                 // If feedback contains a URL different from current KB URL, do targeted swap
-                const newUrl = summaryUrls.find(u => u !== currentSfUrl && u.includes('salesforce'));
+                const newUrl = summaryUrls.find(u => u.replace(/\/+$/, '') !== (currentSfUrl || '').replace(/\/+$/, '') && u.includes('salesforce'));
                 if (currentSfUrl && newUrl) {
                     // Deterministic find/replace — reliable URL swap
-                    updatedKB = currentKB.replace(currentSfUrl, newUrl);
+                    updatedKB = currentKB.replace(currentSfUrl, newUrl.replace(/\/+$/, ''));
                     console.log('[feedback/apply] Deterministic URL swap:', currentSfUrl, '->', newUrl);
                 } else {
                     // Fall back to Gemini for non-URL feedback changes

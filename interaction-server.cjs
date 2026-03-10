@@ -25,7 +25,7 @@ const corsHeaders = {
 // Initialize files on startup
 const signalFile = path.join(__dirname, 'interaction-signals.json');
 if (!fs.existsSync(signalFile)) {
-    fs.writeFileSync(signalFile, JSON.stringify({ APPROVE_REVERSAL_001: false, APPROVE_UPHOLD_002: false, APPROVE_ESCALATE_003: false }, null, 4));
+    fs.writeFileSync(signalFile, JSON.stringify({ APPROVE_REVERSAL_001: false, REJECT_001: false, APPROVE_UPHOLD_002: false, REJECT_002: false, APPROVE_ESCALATE_003: false, REJECT_003: false }, null, 4));
 }
 
 const processesPath = path.join(PUBLIC_DIR, 'data', 'processes.json');
@@ -53,7 +53,7 @@ const server = http.createServer((req, res) => {
 
     if (cleanPath === '/reset') {
         state = { sent: false, confirmed: false, signals: {} };
-        fs.writeFileSync(signalFile, JSON.stringify({ APPROVE_REVERSAL_001: false, APPROVE_UPHOLD_002: false, APPROVE_ESCALATE_003: false }, null, 4));
+        fs.writeFileSync(signalFile, JSON.stringify({ APPROVE_REVERSAL_001: false, REJECT_001: false, APPROVE_UPHOLD_002: false, REJECT_002: false, APPROVE_ESCALATE_003: false, REJECT_003: false }, null, 4));
 
         runningProcesses.forEach((proc) => {
             try { process.kill(-proc.pid, 'SIGKILL'); } catch(e) {}
@@ -116,7 +116,7 @@ const server = http.createServer((req, res) => {
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             try {
-                const { signalId } = JSON.parse(body);
+                const { signal: signalId } = JSON.parse(body);
                 const signals = JSON.parse(fs.readFileSync(signalFile, 'utf8'));
                 signals[signalId] = true;
                 fs.writeFileSync(signalFile, JSON.stringify(signals, null, 4));

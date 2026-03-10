@@ -29,7 +29,8 @@ const updateStatus = async (id, status, currentStatus) => {
     } catch(e) {}
 };
 
-const waitSignal = async (sid) => {
+const waitSignal = async (signals) => {
+    const sids = Array.isArray(signals) ? signals : [signals];
     const sf = path.join(__dirname, '../interaction-signals.json');
     while (true) {
         try {
@@ -37,10 +38,12 @@ const waitSignal = async (sid) => {
                 const c = fs.readFileSync(sf, 'utf8');
                 if (c) {
                     const s = JSON.parse(c);
-                    if (s[sid]) {
-                        delete s[sid];
-                        writeJson(sf, s);
-                        return true;
+                    for (const sid of sids) {
+                        if (s[sid]) {
+                            delete s[sid];
+                            writeJson(sf, s);
+                            return sid;
+                        }
                     }
                 }
             }
@@ -324,16 +327,21 @@ const waitSignal = async (sid) => {
         }]
     });
     await updateStatus(PROCESS_ID, "Needs Attention", "Awaiting approval");
-    await waitSignal("APPROVE_REVERSAL_001");
+    const decision = await waitSignal(["APPROVE_REVERSAL_001", "REJECT_001"]);
+    const approved = decision === "APPROVE_REVERSAL_001";
 
     updateProcessLog(PROCESS_ID, {
         id: "s5",
-        title: "Resolution Approved",
+        title: approved ? "Resolution Approved" : "Resolution Rejected",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "Human reviewer approved: Reverse Adjustment",
             "Proceeding with $24.50 refund to merchant",
             "Customer fraud flag will be applied"
+        ] : [
+            "Human reviewer rejected reversal",
+            "Original $24.50 adjustment stands — customer keeps credit",
+            "No fraud flag applied — case closed as-is"
         ],
         artifacts: [{
             id: "s5-a1",
@@ -357,24 +365,35 @@ const waitSignal = async (sid) => {
     
     updateProcessLog(PROCESS_ID, {
         id: "s6",
-        title: "Resolution Executed",
+        title: approved ? "Resolution Executed" : "Rejection Processed",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "$24.50 reversed to Burger & Beyond's next payout",
             "Salesforce case updated with resolution details",
             "Merchant dispute record shows another case resolved in their favor",
             "Audit trail complete with policy rule and reviewer approval"
+        ] : [
+            "Original $24.50 adjustment maintained",
+            "Customer credit remains — no reversal processed",
+            "Salesforce case updated with rejection details",
+            "Audit trail recorded with reviewer decision"
         ],
         artifacts: [{
             id: "s6-a1",
             type: "table",
-            label: "Resolution Summary",
-            data: [
+            label: approved ? "Resolution Summary" : "Rejection Summary",
+            data: approved ? [
                 {"Field": "Resolution", "Value": "Adjustment Reversed — Merchant Wins"},
                 {"Field": "Amount Returned to Merchant", "Value": "$24.50"},
                 {"Field": "Policy Rule Applied", "Value": "Rule #1: Customer fraud + credible merchant"},
                 {"Field": "Stripe Action", "Value": "Refund reversal processed"},
                 {"Field": "Salesforce Update", "Value": "Case resolution recorded"}
+            ] : [
+                {"Field": "Resolution", "Value": "Adjustment Upheld — Customer Keeps Credit"},
+                {"Field": "Amount", "Value": "$24.50 remains with customer"},
+                {"Field": "Reviewer Decision", "Value": "Reversal rejected"},
+                {"Field": "Stripe Action", "Value": "No action — original adjustment stands"},
+                {"Field": "Salesforce Update", "Value": "Case rejection recorded"}
             ]
         }]
     });
@@ -388,25 +407,36 @@ const waitSignal = async (sid) => {
         id: "s7",
         title: "Case Closed",
         status: "completed",
-        reasoning: [
+        reasoning: approved ? [
             "Customer account flagged for pattern fraud",
             "Flag will assist future dispute investigations",
             "Case notes include fraud indicators and merchant evidence",
             "Resolved within 60-minute SLA (used ~15 of 45 minutes)",
+            "Audit trail complete and stored"
+        ] : [
+            "Merchant notified of rejection outcome",
+            "No fraud flag applied to customer account",
+            "Resolved within 60-minute SLA",
             "Audit trail complete and stored"
         ],
         artifacts: [{
             id: "s7-a1",
             type: "table",
             label: "Case Closure — 00078432",
-            data: [
+            data: approved ? [
                 {"Field": "Case Status", "Value": "Closed — Resolved"},
                 {"Field": "Resolution", "Value": "Adjustment Reversed (Merchant Wins)"},
                 {"Field": "Customer Flag", "Value": "🚩 Pattern Fraud Flag Applied — David Chen"},
                 {"Field": "SLA Status", "Value": "✅ Within SLA"},
                 {"Field": "Audit Trail", "Value": "Complete — all steps documented"}
+            ] : [
+                {"Field": "Case Status", "Value": "Closed — Rejected"},
+                {"Field": "Resolution", "Value": "Adjustment Upheld (Customer Keeps Credit)"},
+                {"Field": "Customer Flag", "Value": "None applied"},
+                {"Field": "SLA Status", "Value": "✅ Within SLA"},
+                {"Field": "Audit Trail", "Value": "Complete — all steps documented"}
             ]
         }]
     });
-    await updateStatus(PROCESS_ID, "Done", "Case closed - merchant wins");
+    await updateStatus(PROCESS_ID, "Done", approved ? "Case closed - merchant wins" : "Case closed - rejection upheld");
 })();

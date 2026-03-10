@@ -29,7 +29,8 @@ const updateStatus = async (id, status, currentStatus) => {
     } catch(e) {}
 };
 
-const waitSignal = async (sid) => {
+const waitSignal = async (signals) => {
+    const sids = Array.isArray(signals) ? signals : [signals];
     const sf = path.join(__dirname, '../interaction-signals.json');
     while (true) {
         try {
@@ -37,10 +38,12 @@ const waitSignal = async (sid) => {
                 const c = fs.readFileSync(sf, 'utf8');
                 if (c) {
                     const s = JSON.parse(c);
-                    if (s[sid]) {
-                        delete s[sid];
-                        writeJson(sf, s);
-                        return true;
+                    for (const sid of sids) {
+                        if (s[sid]) {
+                            delete s[sid];
+                            writeJson(sf, s);
+                            return sid;
+                        }
                     }
                 }
             }
@@ -328,16 +331,21 @@ const waitSignal = async (sid) => {
         }]
     });
     await updateStatus(PROCESS_ID, "Needs Attention", "Awaiting approval");
-    await waitSignal("APPROVE_UPHOLD_002");
+    const decision = await waitSignal(["APPROVE_UPHOLD_002", "REJECT_002"]);
+    const approved = decision === "APPROVE_UPHOLD_002";
 
     updateProcessLog(PROCESS_ID, {
         id: "s5",
-        title: "Resolution Approved",
+        title: approved ? "Resolution Approved" : "Resolution Rejected",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "Human reviewer approved: Uphold Adjustment",
             "Customer keeps $38.75 refund",
             "Merchant absorbs cost due to accuracy issues"
+        ] : [
+            "Human reviewer rejected upholding adjustment",
+            "Adjustment reversed — merchant keeps $38.75",
+            "Customer refund reversed per reviewer decision"
         ],
         artifacts: [{
             id: "s5-a1",
@@ -361,24 +369,35 @@ const waitSignal = async (sid) => {
     
     updateProcessLog(PROCESS_ID, {
         id: "s6",
-        title: "Resolution Executed",
+        title: approved ? "Resolution Executed" : "Rejection Processed",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "Customer's $38.75 refund remains in place - no reversal",
             "Merchant's dispute record updated - 4th case resolved against them in 90 days",
             "Salesforce case updated with resolution details",
             "Dietary restriction violation flagged in notes"
+        ] : [
+            "$38.75 adjustment reversed — merchant keeps funds",
+            "Customer's refund reversed per reviewer decision",
+            "Salesforce case updated with rejection details",
+            "Audit trail recorded with reviewer override"
         ],
         artifacts: [{
             id: "s6-a1",
             type: "table",
-            label: "Resolution Summary",
-            data: [
+            label: approved ? "Resolution Summary" : "Rejection Summary",
+            data: approved ? [
                 {"Field": "Resolution", "Value": "Adjustment Upheld — Customer Wins"},
                 {"Field": "Customer Refund", "Value": "$38.75 retained by Sarah Kim"},
                 {"Field": "Merchant Impact", "Value": "Adjustment stands — deducted from payout"},
                 {"Field": "Policy Rule Applied", "Value": "Rule #2: Merchant accuracy <90% + clean customer"},
                 {"Field": "Additional Note", "Value": "Dietary restriction violation flagged"}
+            ] : [
+                {"Field": "Resolution", "Value": "Adjustment Reversed — Merchant Wins"},
+                {"Field": "Amount Returned", "Value": "$38.75 returned to Taco Fiesta"},
+                {"Field": "Customer Impact", "Value": "Refund reversed per reviewer decision"},
+                {"Field": "Reviewer Decision", "Value": "Override — merchant favored"},
+                {"Field": "Salesforce Update", "Value": "Case rejection recorded"}
             ]
         }]
     });
@@ -392,26 +411,38 @@ const waitSignal = async (sid) => {
         id: "s7",
         title: "Case Closed",
         status: "completed",
-        reasoning: [
+        reasoning: approved ? [
             "No customer fraud flag - Sarah Kim has clean profile",
             "Merchant note added: 4th dispute resolved against Taco Fiesta in 90 days",
             "Accuracy concern flagged for merchant partnerships review",
             "Case resolved within 60-minute SLA",
             "Audit trail complete with evidence and reasoning"
+        ] : [
+            "Merchant notified of favorable outcome",
+            "No accuracy flag applied per reviewer override",
+            "Case resolved within 60-minute SLA",
+            "Audit trail complete with reviewer override noted"
         ],
         artifacts: [{
             id: "s7-a1",
             type: "table",
             label: "Case Closure — 00078445",
-            data: [
+            data: approved ? [
                 {"Field": "Case Status", "Value": "Closed — Resolved"},
                 {"Field": "Resolution", "Value": "Adjustment Upheld (Customer Wins)"},
                 {"Field": "Customer Flag", "Value": "None — clean profile"},
                 {"Field": "Merchant Note", "Value": "⚠️ Accuracy concern — 4th dispute against merchant in 90 days"},
                 {"Field": "SLA Status", "Value": "✅ Within SLA"},
                 {"Field": "Audit Trail", "Value": "Complete — all steps documented"}
+            ] : [
+                {"Field": "Case Status", "Value": "Closed — Rejected"},
+                {"Field": "Resolution", "Value": "Adjustment Reversed (Merchant Wins)"},
+                {"Field": "Customer Flag", "Value": "None"},
+                {"Field": "Merchant Note", "Value": "Reviewer override — merchant favored"},
+                {"Field": "SLA Status", "Value": "✅ Within SLA"},
+                {"Field": "Audit Trail", "Value": "Complete — all steps documented"}
             ]
         }]
     });
-    await updateStatus(PROCESS_ID, "Done", "Case closed - customer wins");
+    await updateStatus(PROCESS_ID, "Done", approved ? "Case closed - customer wins" : "Case closed - merchant wins (override)");
 })();

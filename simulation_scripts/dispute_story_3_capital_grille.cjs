@@ -29,7 +29,8 @@ const updateStatus = async (id, status, currentStatus) => {
     } catch(e) {}
 };
 
-const waitSignal = async (sid) => {
+const waitSignal = async (signals) => {
+    const sids = Array.isArray(signals) ? signals : [signals];
     const sf = path.join(__dirname, '../interaction-signals.json');
     while (true) {
         try {
@@ -37,10 +38,12 @@ const waitSignal = async (sid) => {
                 const c = fs.readFileSync(sf, 'utf8');
                 if (c) {
                     const s = JSON.parse(c);
-                    if (s[sid]) {
-                        delete s[sid];
-                        writeJson(sf, s);
-                        return true;
+                    for (const sid of sids) {
+                        if (s[sid]) {
+                            delete s[sid];
+                            writeJson(sf, s);
+                            return sid;
+                        }
                     }
                 }
             }
@@ -345,16 +348,21 @@ const waitSignal = async (sid) => {
         }]
     });
     await updateStatus(PROCESS_ID, "Needs Attention", "Awaiting escalation decision");
-    await waitSignal("APPROVE_ESCALATE_003");
+    const decision = await waitSignal(["APPROVE_ESCALATE_003", "REJECT_003"]);
+    const approved = decision === "APPROVE_ESCALATE_003";
 
     updateProcessLog(PROCESS_ID, {
         id: "s5",
-        title: "Escalation Approved",
+        title: approved ? "Escalation Approved" : "Escalation Rejected",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "Human reviewer confirmed: Escalate to Tier 2",
             "Packaging complete evidence for senior analyst",
             "Case complexity requires higher-tier judgment"
+        ] : [
+            "Human reviewer rejected escalation",
+            "Resolving at current tier per reviewer decision",
+            "Applying best-fit policy resolution"
         ],
         artifacts: [{
             id: "s5-a1",
@@ -378,25 +386,37 @@ const waitSignal = async (sid) => {
     
     updateProcessLog(PROCESS_ID, {
         id: "s6",
-        title: "Escalation Executed",
+        title: approved ? "Escalation Executed" : "L1 Resolution Applied",
         status: "success",
-        reasoning: [
+        reasoning: approved ? [
             "Case routed to Tier 2 review queue with 'Urgent — Escalated' priority",
             "Complete evidence package attached: merchant photos, delivery data, Stripe verification",
             "Specific questions flagged for Tier 2: (1) Platform absorb full or partial cost? (2) Driver investigation for incomplete pickup? (3) Corporate account relationship outreach? (4) Platinum merchant communication?",
             "Full reasoning chain included - Tier 2 analyst has complete context"
+        ] : [
+            "Applying split resolution at L1: partial refund of $93.75 (50%)",
+            "Platform absorbs cost — merchant and customer both partially made whole",
+            "Driver flagged for investigation separately",
+            "Salesforce case updated with L1 resolution details"
         ],
         artifacts: [{
             id: "s6-a1",
             type: "table",
-            label: "Escalation Summary",
-            data: [
+            label: approved ? "Escalation Summary" : "L1 Resolution Summary",
+            data: approved ? [
                 {"Field": "Resolution", "Value": "Escalated to Tier 2 Review"},
                 {"Field": "Escalation Reason", "Value": "Mixed evidence — no single policy rule applies"},
                 {"Field": "Key Conflicts", "Value": "Platinum merchant (driver fault) vs elevated customer vs delivery failure vs >$100"},
                 {"Field": "Tier 2 Priority", "Value": "Urgent — Escalated"},
                 {"Field": "Evidence Package", "Value": "Complete — photos, delivery data, Stripe verification, full reasoning"},
                 {"Field": "Questions for Tier 2", "Value": "Cost allocation, driver investigation, account mgmt, merchant comms"}
+            ] : [
+                {"Field": "Resolution", "Value": "Partial Refund — 50% ($93.75)"},
+                {"Field": "Cost Bearer", "Value": "Platform absorbs — no merchant/customer impact"},
+                {"Field": "Merchant Impact", "Value": "No adjustment — Platinum status preserved"},
+                {"Field": "Customer Refund", "Value": "$93.75 partial refund issued"},
+                {"Field": "Driver Action", "Value": "Flagged for investigation — incomplete pickup"},
+                {"Field": "Salesforce Update", "Value": "L1 resolution recorded"}
             ]
         }]
     });
@@ -408,21 +428,28 @@ const waitSignal = async (sid) => {
     
     updateProcessLog(PROCESS_ID, {
         id: "s7",
-        title: "Case Escalated — Pending Tier 2",
+        title: approved ? "Case Escalated — Pending Tier 2" : "Case Closed — L1 Resolution",
         status: "completed",
-        reasoning: [
+        reasoning: approved ? [
             "L1 investigation complete - case handed off to Tier 2 with full context",
             "No customer fraud flag - 8.5% below threshold, mixed refund types",
             "No merchant flag - Capital Grille has excellent track record and strong evidence",
             "Driver flagged for review: 33 min late, unscheduled stop, incomplete pickup",
             "Investigation completed within SLA - Tier 2 receives comprehensive package",
             "Case status: Escalated — Pending Tier 2 Review"
+        ] : [
+            "L1 investigation complete - resolved without escalation per reviewer",
+            "Partial refund of $93.75 issued to customer",
+            "No merchant flag - Capital Grille Platinum status preserved",
+            "Driver flagged for review: 33 min late, unscheduled stop, incomplete pickup",
+            "Case resolved within SLA",
+            "Audit trail complete with reviewer override noted"
         ],
         artifacts: [{
             id: "s7-a1",
             type: "table",
             label: "Case Status — 00078458",
-            data: [
+            data: approved ? [
                 {"Field": "Case Status", "Value": "Escalated — Pending Tier 2 Review"},
                 {"Field": "L1 Investigation", "Value": "Complete — all evidence gathered"},
                 {"Field": "Customer Flag", "Value": "None — below fraud threshold"},
@@ -430,8 +457,16 @@ const waitSignal = async (sid) => {
                 {"Field": "Driver Flag", "Value": "⚠️ Flagged for review — 33 min late, unscheduled stop, incomplete pickup"},
                 {"Field": "SLA Status", "Value": "✅ Investigation completed within SLA"},
                 {"Field": "Audit Trail", "Value": "Complete — full reasoning in escalation package"}
+            ] : [
+                {"Field": "Case Status", "Value": "Closed — L1 Resolution Applied"},
+                {"Field": "Resolution", "Value": "Partial Refund $93.75 (50%) — Platform Absorbs"},
+                {"Field": "Customer Flag", "Value": "None — below fraud threshold"},
+                {"Field": "Merchant Flag", "Value": "None — Platinum status preserved"},
+                {"Field": "Driver Flag", "Value": "⚠️ Flagged for review — 33 min late, unscheduled stop"},
+                {"Field": "SLA Status", "Value": "✅ Within SLA"},
+                {"Field": "Audit Trail", "Value": "Complete — reviewer override documented"}
             ]
         }]
     });
-    await updateStatus(PROCESS_ID, "Escalated", "Pending Tier 2 review");
+    await updateStatus(PROCESS_ID, approved ? "Escalated" : "Done", approved ? "Pending Tier 2 review" : "Case closed - L1 resolution applied");
 })();

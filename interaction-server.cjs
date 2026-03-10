@@ -271,11 +271,30 @@ const server = http.createServer((req, res) => {
                 const newFile = `kb_after_${Date.now()}.md`;
                 fs.writeFileSync(path.join(snapshotsDir, prevFile), currentKB);
 
-                const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-                const model = genAI.getGenerativeModel({ model: process.env.VITE_MODEL || 'gemini-2.5-flash' });
-                const prompt = `Current KB:\n${currentKB}\n\nFeedback to apply: "${item.summary}"\n\nUpdate the knowledge base. Return ONLY the updated markdown, no explanation.`;
-                const result = await model.generateContent(prompt);
-                const updatedKB = result.response.text().replace(/```markdown\n?|```/g, '').trim();
+                let updatedKB = currentKB;
+
+                // Detect URL changes in feedback summary — use deterministic find/replace
+                const urlPattern = /https?:\/\/[^\s"'<>]+/g;
+                const summaryUrls = (item.summary || '').match(urlPattern) || [];
+                const kbUrlLine = currentKB.split('\n').find(l => l.includes('Salesforce Portal URL'));
+                const kbUrlMatch = kbUrlLine ? kbUrlLine.match(urlPattern) : null;
+                const currentSfUrl = kbUrlMatch ? kbUrlMatch[0] : null;
+
+                // If feedback contains a URL different from current KB URL, do targeted swap
+                const newUrl = summaryUrls.find(u => u !== currentSfUrl && u.includes('salesforce'));
+                if (currentSfUrl && newUrl) {
+                    // Deterministic find/replace — reliable URL swap
+                    updatedKB = currentKB.replace(currentSfUrl, newUrl);
+                    console.log('[feedback/apply] Deterministic URL swap:', currentSfUrl, '->', newUrl);
+                } else {
+                    // Fall back to Gemini for non-URL feedback changes
+                    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+                    const model = genAI.getGenerativeModel({ model: process.env.VITE_MODEL || 'gemini-2.5-flash' });
+                    const prompt = `You are updating a knowledge base document. Apply ONLY the specific change described in the feedback. Do NOT reformat, restructure, or rewrite any other part of the document. Keep everything else exactly as-is.\n\nCurrent KB:\n${currentKB}\n\nFeedback to apply: "${item.summary}"\n\nReturn ONLY the complete updated markdown with the minimal change applied. No explanation.`;
+                    const result = await model.generateContent(prompt);
+                    updatedKB = result.response.text().replace(/\`\`\`markdown\n?|\`\`\`/g, '').trim();
+                    console.log('[feedback/apply] Gemini update applied for non-URL feedback');
+                }
 
                 fs.writeFileSync(KB_PATH, updatedKB);
                 fs.writeFileSync(path.join(snapshotsDir, newFile), updatedKB);
@@ -284,12 +303,14 @@ const server = http.createServer((req, res) => {
                 versions.push({ id: Date.now().toString(), timestamp: new Date().toISOString(), snapshotFile: newFile, previousFile: prevFile, changes: [item.summary] });
                 fs.writeFileSync(KB_VERSIONS_PATH, JSON.stringify(versions, null, 2));
 
-                const updatedQueue = queue.filter(q => q.id !== feedbackId);
+                // Bug fix: set status to 'applied' instead of removing from queue
+                const updatedQueue = queue.map(q => q.id === feedbackId ? { ...q, status: 'applied', appliedAt: new Date().toISOString() } : q);
                 fs.writeFileSync(FEEDBACK_QUEUE_PATH, JSON.stringify(updatedQueue, null, 2));
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ success: true, content: updatedKB }));
             } catch(e) {
+                console.error('[feedback/apply] Error:', e.message);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: e.message }));
             }

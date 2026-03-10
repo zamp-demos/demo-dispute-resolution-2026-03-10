@@ -12,7 +12,7 @@ import kbContent from '../data/knowledgeBase.md?raw';
 
 const KnowledgeBase = () => {
     const currentKb = { label: 'Knowledge Base', shortLabel: 'KB' };
-    const knowledgeBaseContent = kbContent;
+    const [knowledgeBaseContent, setKnowledgeBaseContent] = useState(kbContent);
 
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -39,22 +39,58 @@ const KnowledgeBase = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    useEffect(() => {
-        const fetchLatestVersion = async () => {
-            try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-                const response = await fetch(`${API_URL}/api/kb/versions`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.versions && data.versions.length > 0) {
-                        setLatestVersion(data.versions[0]);
+    // Fetch live KB content from server (not static import)
+    const fetchLiveKbContent = async () => {
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const response = await fetch(`${API_URL}/api/kb/content`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.content) {
+                    setKnowledgeBaseContent(data.content);
+                    // Also update display if not viewing a specific version
+                    if (!viewingVersion) {
+                        setDisplayContent(data.content);
                     }
                 }
-            } catch (error) {
-                console.error('Error fetching latest version:', error);
             }
+        } catch (error) {
+            console.error('Error fetching live KB content:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchLiveKbContent();
+    }, []);
+
+    // Listen for kb-updated events (dispatched by FeedbackQueuePanel after apply)
+    useEffect(() => {
+        const handleKbUpdated = () => {
+            fetchLiveKbContent();
+            // Also refresh versions
+            fetchLatestVersionFn();
         };
-        fetchLatestVersion();
+        window.addEventListener('kb-updated', handleKbUpdated);
+        return () => window.removeEventListener('kb-updated', handleKbUpdated);
+    }, [viewingVersion]);
+
+    const fetchLatestVersionFn = async () => {
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const response = await fetch(`${API_URL}/api/kb/versions`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.versions && data.versions.length > 0) {
+                    setLatestVersion(data.versions[0]);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching latest version:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchLatestVersionFn();
     }, []);
 
     const handleSendMessage = async () => {

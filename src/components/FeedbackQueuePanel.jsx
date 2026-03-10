@@ -43,6 +43,8 @@ const FeedbackQueuePanel = ({ isOpen, onClose, triggerRef }) => {
             if (response.ok) {
                 await fetchQueue();
                 setActiveTab('applied');
+                // Notify KnowledgeBase to refresh content after KB was updated
+                window.dispatchEvent(new CustomEvent('kb-updated'));
             } else {
                 console.error('Failed to apply feedback');
             }

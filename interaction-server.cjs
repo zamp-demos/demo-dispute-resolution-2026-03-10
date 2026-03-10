@@ -297,6 +297,31 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+
+    if (cleanPath === '/api/kb/update' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const { find, replace } = JSON.parse(body);
+                if (!find) throw new Error('Missing "find" field');
+                const currentKB = fs.readFileSync(KB_PATH, 'utf8');
+                if (!currentKB.includes(find)) {
+                    res.writeHead(404, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Text not found in KB' }));
+                    return;
+                }
+                const updatedKB = currentKB.replace(find, replace || '');
+                fs.writeFileSync(KB_PATH, updatedKB);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, message: 'KB updated' }));
+            } catch(e) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: e.message }));
+            }
+        });
+        return;
+    }
     if (cleanPath === '/api/kb/content') {
         const versionId = new URL(req.url, `http://${req.headers.host}`).searchParams.get('versionId');
         let content;

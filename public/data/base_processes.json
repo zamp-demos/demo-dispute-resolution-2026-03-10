@@ -1,0 +1,38 @@
+[
+  {
+    "id": "DISP_001",
+    "category": "Dispute Resolution",
+    "name": "Burger & Beyond \u2014 Missing Items",
+    "merchantName": "Burger & Beyond",
+    "disputeAmount": "$24.50",
+    "disputeType": "Missing Items",
+    "priority": "High",
+    "caseNumber": "00078432",
+    "status": "Ready",
+    "currentStatus": "Ready for processing"
+  },
+  {
+    "id": "DISP_002",
+    "category": "Dispute Resolution",
+    "name": "Taco Fiesta \u2014 Wrong Order",
+    "merchantName": "Taco Fiesta",
+    "disputeAmount": "$38.75",
+    "disputeType": "Wrong Order",
+    "priority": "Medium",
+    "caseNumber": "00078445",
+    "status": "Ready",
+    "currentStatus": "Ready for processing"
+  },
+  {
+    "id": "DISP_003",
+    "category": "Dispute Resolution",
+    "name": "Capital Grille \u2014 Complex Catering",
+    "merchantName": "Capital Grille",
+    "disputeAmount": "$187.50",
+    "disputeType": "Missing / Quality",
+    "priority": "Urgent",
+    "caseNumber": "00078458",
+    "status": "Ready",
+    "currentStatus": "Ready for processing"
+  }
+]

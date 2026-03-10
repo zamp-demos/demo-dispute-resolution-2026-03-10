@@ -170,10 +170,10 @@ const DashboardLayout = () => {
                             <Plus size={14} className="text-[#cacaca] cursor-pointer hover:text-[#8f8f8f]" />
                         </div>
                         <SidebarItem
-                            to="/done/CATEGORY_SLUG"
+                            to="/done/dispute-resolution"
                             icon={<Activity />}
-                            label="SOP Management"
-                            isActive={location.pathname.includes('CATEGORY_SLUG') || isProcessDetailPage}
+                            label="Dispute Resolution"
+                            isActive={location.pathname.includes('dispute-resolution') || isProcessDetailPage}
                         />
                     </div>
 
@@ -227,7 +227,7 @@ const DashboardLayout = () => {
                         <div className="flex items-center gap-2 text-[13px]">
                             {location.pathname.includes('/knowledge-base') ? (
                                 <>
-                                    <button onClick={() => navigate('/done/CATEGORY_SLUG')} className="hover:bg-white rounded p-1 transition-colors">
+                                    <button onClick={() => navigate('/done/dispute-resolution')} className="hover:bg-white rounded p-1 transition-colors">
                                         <ArrowLeft className="w-3.5 h-3.5 text-[#171717]" />
                                     </button>
                                     <span className="text-[#8f8f8f] font-normal">SOP Management /</span>
@@ -235,7 +235,7 @@ const DashboardLayout = () => {
                                 </>
                             ) : isProcessDetailPage ? (
                                 <>
-                                    <button onClick={() => navigate('/done/CATEGORY_SLUG')} className="hover:bg-white rounded p-1 transition-colors">
+                                    <button onClick={() => navigate('/done/dispute-resolution')} className="hover:bg-white rounded p-1 transition-colors">
                                         <ArrowLeft className="w-3.5 h-3.5 text-[#171717]" />
                                     </button>
                                     <span className="text-[#171717] font-[550]">SOP Management</span>

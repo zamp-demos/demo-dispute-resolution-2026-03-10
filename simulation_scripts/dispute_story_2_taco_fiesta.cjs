@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const PROJECT_ROOT = path.join(__dirname, '..');
 const PUBLIC_DATA_DIR = path.join(PROJECT_ROOT, 'public/data');
+const recorder = require('./browser_recorder.cjs');
 const PROCESS_ID = "DISP_002";
 
 const delay = (ms) => new Promise(r => setTimeout(r, ms));
@@ -61,6 +62,7 @@ const waitSignal = async (signals) => {
     await updateStatus(PROCESS_ID, "In Progress", "Scanning dispute queue...");
     await delay(2500);
     
+    const s2SfDisputeQueuePath = await recorder.recordSalesforce({outputFile: "s2_sf_dispute_queue.webm", caseNumber: null, tabLabel: null});
     updateProcessLog(PROCESS_ID, {
         id: "s1",
         title: "Case Intake Complete",
@@ -83,7 +85,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Priority", "Value": "Medium"},
                 {"Field": "Order ID", "Value": "UE-ORD-9951482"}
             ]
-        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/recordings/s2_sf_dispute_queue.webm" }]
+        }, { id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: s2SfDisputeQueuePath }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
     await delay(2000);
@@ -92,6 +94,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s2a", time: now(), title: "Reviewing merchant profile...", status: "processing"});
     await delay(2000);
     
+    const s2SfMerchantProfilePath = await recorder.recordSalesforce({outputFile: "s2_sf_merchant_profile.webm", caseNumber: "00078445", tabLabel: "Merchant Profile"});
     updateProcessLog(PROCESS_ID, {
         id: "s2a",
         title: "Merchant Profile Assessed",
@@ -113,7 +116,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Prior Disputes (90 days)", "Value": "7 (3 wrong-order)", "Policy Implication": "High dispute volume, pattern"},
                 {"Field": "Account Status", "Value": "Active — Under Review", "Policy Implication": "Flagged for accuracy issues"}
             ]
-        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/recordings/s2_sf_merchant_profile.webm" }]
+        }, { id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: s2SfMerchantProfilePath }]
     });
     await delay(1500);
 
@@ -121,6 +124,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s2b", time: now(), title: "Analyzing order details...", status: "processing"});
     await delay(2000);
     
+    const s2SfOrderDetailsPath = await recorder.recordSalesforce({outputFile: "s2_sf_order_details.webm", caseNumber: "00078445", tabLabel: "Order Details"});
     updateProcessLog(PROCESS_ID, {
         id: "s2b",
         title: "Order Analysis Complete",
@@ -142,7 +146,7 @@ const waitSignal = async (signals) => {
                 {"Ordered": "Horchata", "Price": "$4.25", "Received": "Horchata", "Match": "✅ Correct"},
                 {"Ordered": "Guac & Chips", "Price": "$8.00", "Received": "Queso & Chips", "Match": "❌ Wrong item"}
             ]
-        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/recordings/s2_sf_order_details.webm" }]
+        }, { id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: s2SfOrderDetailsPath }]
     });
     await delay(1500);
 
@@ -150,6 +154,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s2c", time: now(), title: "Checking delivery data...", status: "processing"});
     await delay(2000);
     
+    const s2SfDeliveryTrackingPath = await recorder.recordSalesforce({outputFile: "s2_sf_delivery_tracking.webm", caseNumber: "00078445", tabLabel: "Delivery Tracking"});
     updateProcessLog(PROCESS_ID, {
         id: "s2c",
         title: "Delivery Verification Complete",
@@ -171,7 +176,7 @@ const waitSignal = async (signals) => {
                 {"Field": "Proof of Delivery", "Value": "Photo: sealed bag at door", "Assessment": "Confirms restaurant packed wrong order"},
                 {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}
             ]
-        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/recordings/s2_sf_delivery_tracking.webm" }]
+        }, { id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: s2SfDeliveryTrackingPath }]
     });
     await delay(1500);
 
@@ -179,6 +184,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s2d", time: now(), title: "Assessing customer risk profile...", status: "processing"});
     await delay(2500);
     
+    const s2SfCustomerHistoryPath = await recorder.recordSalesforce({outputFile: "s2_sf_customer_history.webm", caseNumber: "00078445", tabLabel: "Customer History"});
     updateProcessLog(PROCESS_ID, {
         id: "s2d",
         title: "Customer Risk Assessment Complete",
@@ -202,7 +208,7 @@ const waitSignal = async (signals) => {
                 {"Metric": "Refunds Last 90 Days", "Value": "1 ($12.30)", "Threshold": "3+ = Pattern", "Flag": "✅ Clean"},
                 {"Metric": "Dietary Profile", "Value": "Vegetarian", "Threshold": "—", "Flag": "Received meat — food safety concern"}
             ]
-        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/recordings/s2_sf_customer_history.webm" }]
+        }, { id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: s2SfCustomerHistoryPath }]
     });
     await delay(1500);
 
@@ -210,6 +216,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s2e", time: now(), title: "Reading merchant statement...", status: "processing"});
     await delay(2000);
     
+    const s2SfMerchantStatementPath = await recorder.recordSalesforce({outputFile: "s2_sf_merchant_statement.webm", caseNumber: "00078445", tabLabel: "Merchant Statement"});
     updateProcessLog(PROCESS_ID, {
         id: "s2e",
         title: "Merchant Statement Reviewed",
@@ -231,7 +238,7 @@ const waitSignal = async (signals) => {
                 {"Element": "Explanation for Error", "Detail": "None offered", "Credibility Assessment": "No account of meat items sent"},
                 {"Element": "Overall Credibility", "Detail": "LOW", "Credibility Assessment": "Vague + no evidence + 88.5% accuracy + 3 prior wrong-order disputes"}
             ]
-        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/recordings/s2_sf_merchant_statement.webm" }]
+        }, { id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: s2SfMerchantStatementPath }]
     });
     await delay(1500);
 
@@ -239,6 +246,7 @@ const waitSignal = async (signals) => {
     updateProcessLog(PROCESS_ID, {id: "s3", time: now(), title: "Verifying payment in Stripe...", status: "processing"});
     await delay(2500);
     
+    const s2StripePaymentPath = await recorder.recordStripe({outputFile: "s2_stripe_payment.webm", paymentId: "pi_3Ox9mN4fYvLZmp3D"});
     updateProcessLog(PROCESS_ID, {
         id: "s3",
         title: "Payment Verification Complete",
@@ -263,7 +271,7 @@ const waitSignal = async (signals) => {
                 {"Field": "90-Day Refund Total", "Value": "$12.30 (1 transaction)"},
                 {"Field": "Merchant Weekly Payout", "Value": "~$2,800"}
             ]
-        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/recordings/s2_stripe_payment.webm" }]
+        }, { id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: s2StripePaymentPath }]
     });
     await delay(1500);
 

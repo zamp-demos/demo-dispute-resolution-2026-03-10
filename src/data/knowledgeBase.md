@@ -121,3 +121,17 @@ Human reviewer options:
 For questions about this process, contact Dispute Operations team.
 For policy clarifications, consult Compliance & Risk team.
 For technical issues with Salesforce/Stripe integrations, contact Platform Engineering.
+
+## Portal Configuration
+**Salesforce Portal URL**: https://salesforce-ubereats-demo.vercel.app
+**Salesforce Credentials**: agent@ubereats.com / UberEats2026!
+
+**Stripe Portal URL**: https://stripe-ubereats-demo-vignesh-zamps-projects.vercel.app
+**Stripe Credentials**: finance@ubereats.com / UberEats2026!
+
+## Case-to-Story Mapping
+- Story 1 (DISP_001): Case 00078432 — Burger & Beyond
+- Story 2 (DISP_002): Case 00078445 — Taco Fiesta
+
+## Tab Navigation
+Salesforce tabs (in order): Order Details, Customer History, Merchant Profile, Delivery Tracking, Merchant Statement, Related

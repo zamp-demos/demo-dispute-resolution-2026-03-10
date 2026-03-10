@@ -81,8 +81,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Amount", "Value": "$187.50"},
                 {"Field": "Priority", "Value": "Urgent"},
                 {"Field": "Order ID", "Value": "UE-ORD-9958734"},
-                {"Field": "Customer", "Value": "Whitfield & Associates (Corporate)"}
-            ]
+                {"Field": "Customer", "Value": "Whitfield & Associates (Corporate)"}, {
+            id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/screenshots/sf_case_queue.png"
+        }]
         }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
@@ -113,8 +114,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Order Accuracy Rate", "Value": "98.8%", "Policy Implication": "Well above 95% threshold — highly credible"},
                 {"Field": "Annual Platform Revenue", "Value": "~$960,000", "Policy Implication": "High-value merchant account"},
                 {"Field": "Prior Disputes (90 days)", "Value": "2", "Policy Implication": "Both resolved in merchant's favor"},
-                {"Field": "Account Status", "Value": "Active — Excellent Standing", "Policy Implication": "No flags or concerns"}
-            ]
+                {"Field": "Account Status", "Value": "Active — Excellent Standing", "Policy Implication": "No flags or concerns"}, {
+            id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/screenshots/sf_merchant_profile.png"
+        }]
         }]
     });
     await delay(1500);
@@ -145,8 +147,9 @@ const waitSignal = async (sid) => {
                 {"Item": "Caesar Salad Station", "Price": "$28.00", "Status": "Delivered — cold, poor presentation"},
                 {"Item": "Artisan Cheese Board", "Price": "$35.00", "Status": "Delivered — acceptable"},
                 {"Item": "Dessert Trio", "Price": "$41.00", "Status": "MISSING"},
-                {"Item": "Total", "Price": "$187.50", "Status": "2 missing ($79.50), 2 quality issues"}
-            ]
+                {"Item": "Total", "Price": "$187.50", "Status": "2 missing ($79.50), 2 quality issues"}, {
+            id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/screenshots/sf_order_details.png"
+        }]
         }]
     });
     await delay(1500);
@@ -175,8 +178,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Route", "Value": "Deviation detected", "Assessment": "🚩 Unscheduled 8-min stop during transit"},
                 {"Field": "Proof of Delivery", "Value": "Photo: 3 bags at door", "Assessment": "🚩 Order had 5 platters — only 3 delivered"},
                 {"Field": "Driver Notes", "Value": "None provided", "Assessment": "No explanation for delay or stop"},
-                {"Field": "Temperature Impact", "Value": "33 min delay", "Assessment": "Likely caused food quality issues"}
-            ]
+                {"Field": "Temperature Impact", "Value": "33 min delay", "Assessment": "Likely caused food quality issues"}, {
+            id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/screenshots/sf_delivery_tracking.png"
+        }]
         }]
     });
     await delay(1500);
@@ -207,8 +211,9 @@ const waitSignal = async (sid) => {
                 {"Metric": "Total Refunds", "Value": "4", "Threshold": "—", "Flag": "—"},
                 {"Metric": "Refund Rate", "Value": "8.5%", "Threshold": ">10% = Fraud", "Flag": "⚠️ Below threshold but elevated"},
                 {"Metric": "Refund Breakdown", "Value": "2 late, 1 quality, 1 missing", "Threshold": "3+ same type = Pattern", "Flag": "✅ No pattern — mixed"},
-                {"Metric": "Refunds Last 90 Days", "Value": "4 ($312.00)", "Threshold": "3+ = Pattern", "Flag": "⚠️ Count hits threshold but mixed types"}
-            ]
+                {"Metric": "Refunds Last 90 Days", "Value": "4 ($312.00)", "Threshold": "3+ = Pattern", "Flag": "⚠️ Count hits threshold but mixed types"}, {
+            id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/screenshots/sf_customer_history.png"
+        }]
         }]
     });
     await delay(1500);
@@ -238,8 +243,9 @@ const waitSignal = async (sid) => {
                 {"Element": "Evidence Provided", "Detail": "Kitchen prep photos of all 5 platters", "Credibility Assessment": "Physical evidence — high weight"},
                 {"Element": "Driver Pickup", "Detail": "Driver arrived 10:05, loaded only 3", "Credibility Assessment": "Explains 3-bag delivery photo"},
                 {"Element": "Missing Items Location", "Detail": "2 platters remained on pickup shelf", "Credibility Assessment": "Accounts for missing items"},
-                {"Element": "Overall Credibility", "Detail": "VERY HIGH", "Credibility Assessment": "Specific + photo + 98.8% accuracy"}
-            ]
+                {"Element": "Overall Credibility", "Detail": "VERY HIGH", "Credibility Assessment": "Specific + photo + 98.8% accuracy"}, {
+            id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/screenshots/sf_merchant_statement.png"
+        }]
         }]
     });
     await delay(1500);
@@ -271,8 +277,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Customer Refund Rate", "Value": "8.5% (4/47 orders)"},
                 {"Field": "Refund Breakdown", "Value": "2 late, 1 quality, 1 missing"},
                 {"Field": "90-Day Refund Total", "Value": "$312.00 (4 transactions)"},
-                {"Field": "Merchant Weekly Payout", "Value": "~$18,500"}
-            ]
+                {"Field": "Merchant Weekly Payout", "Value": "~$18,500"}, {
+            id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/screenshots/stripe_payment_003.png"
+        }]
         }]
     });
     await delay(1500);
@@ -337,7 +344,10 @@ const waitSignal = async (sid) => {
             label: "Approve Escalation",
             data: {
                 question: "Escalate Case 00078458 (Capital Grille, $187.50) to Tier 2? Evidence conflicts: Platinum merchant (98.8%) has kitchen photos proving driver loaded only 3 of 5 containers. Delivery 33 min late with unscheduled stop. Corporate customer has 8.5% refund rate (elevated but below threshold). Amount >$100. No single policy rule resolves competing interests cleanly.",
-                options: ["Escalate to Tier 2"]
+                options: [
+                    {"label": "Approve — Escalate to Tier 2 review", "value": "approve_escalate", "signal": "APPROVE_ESCALATE_003"},
+                    {"label": "Reject — Resolve at current tier", "value": "reject", "signal": "REJECT_003"}
+                ]
             }
         }]
     });
@@ -359,7 +369,10 @@ const waitSignal = async (sid) => {
             label: "Approve Escalation",
             data: {
                 question: "Escalate Case 00078458 (Capital Grille, $187.50) to Tier 2? Evidence conflicts: Platinum merchant (98.8%) has kitchen photos proving driver loaded only 3 of 5 containers. Delivery 33 min late with unscheduled stop. Corporate customer has 8.5% refund rate (elevated but below threshold). Amount >$100. No single policy rule resolves competing interests cleanly.",
-                options: ["Escalate to Tier 2"]
+                options: [
+                    {"label": "Approve — Escalate to Tier 2 review", "value": "approve_escalate", "signal": "APPROVE_ESCALATE_003"},
+                    {"label": "Reject — Resolve at current tier", "value": "reject", "signal": "REJECT_003"}
+                ]
             }
         }]
     });

@@ -78,8 +78,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Type", "Value": "Wrong Order"},
                 {"Field": "Amount", "Value": "$38.75"},
                 {"Field": "Priority", "Value": "Medium"},
-                {"Field": "Order ID", "Value": "UE-ORD-9951482"}
-            ]
+                {"Field": "Order ID", "Value": "UE-ORD-9951482"}, {
+            id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/screenshots/sf_case_queue.png"
+        }]
         }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
@@ -108,8 +109,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Partner Tier", "Value": "Silver", "Policy Implication": "Mid-tier partner"},
                 {"Field": "Order Accuracy Rate", "Value": "88.5%", "Policy Implication": "🚩 Below 90% threshold — systemic issues"},
                 {"Field": "Prior Disputes (90 days)", "Value": "7 (3 wrong-order)", "Policy Implication": "High dispute volume, pattern"},
-                {"Field": "Account Status", "Value": "Active — Under Review", "Policy Implication": "Flagged for accuracy issues"}
-            ]
+                {"Field": "Account Status", "Value": "Active — Under Review", "Policy Implication": "Flagged for accuracy issues"}, {
+            id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/screenshots/sf_merchant_profile.png"
+        }]
         }]
     });
     await delay(1500);
@@ -137,8 +139,9 @@ const waitSignal = async (sid) => {
                 {"Ordered": "Veggie Burrito Bowl", "Price": "$14.50", "Received": "Carne Asada Burrito", "Match": "❌ Wrong (meat)"},
                 {"Ordered": "Black Bean Tacos x2", "Price": "$12.00", "Received": "Carnitas Tacos", "Match": "❌ Wrong (meat)"},
                 {"Ordered": "Horchata", "Price": "$4.25", "Received": "Horchata", "Match": "✅ Correct"},
-                {"Ordered": "Guac & Chips", "Price": "$8.00", "Received": "Queso & Chips", "Match": "❌ Wrong item"}
-            ]
+                {"Ordered": "Guac & Chips", "Price": "$8.00", "Received": "Queso & Chips", "Match": "❌ Wrong item"}, {
+            id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/screenshots/sf_order_details.png"
+        }]
         }]
     });
     await delay(1500);
@@ -166,8 +169,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Actual Delivery", "Value": "39 min", "Assessment": "On time (1 min early)"},
                 {"Field": "Route", "Value": "Direct, no deviations", "Assessment": "No driver-side issues"},
                 {"Field": "Proof of Delivery", "Value": "Photo: sealed bag at door", "Assessment": "Confirms restaurant packed wrong order"},
-                {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}
-            ]
+                {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}, {
+            id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/screenshots/sf_delivery_tracking.png"
+        }]
         }]
     });
     await delay(1500);
@@ -197,8 +201,9 @@ const waitSignal = async (sid) => {
                 {"Metric": "Refund Rate", "Value": "4.5%", "Threshold": ">10% = Fraud", "Flag": "✅ Well below threshold"},
                 {"Metric": "Prior Refund Reason", "Value": "Late delivery", "Threshold": "3+ same type = Pattern", "Flag": "✅ No pattern"},
                 {"Metric": "Refunds Last 90 Days", "Value": "1 ($12.30)", "Threshold": "3+ = Pattern", "Flag": "✅ Clean"},
-                {"Metric": "Dietary Profile", "Value": "Vegetarian", "Threshold": "—", "Flag": "Received meat — food safety concern"}
-            ]
+                {"Metric": "Dietary Profile", "Value": "Vegetarian", "Threshold": "—", "Flag": "Received meat — food safety concern"}, {
+            id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/screenshots/sf_customer_history.png"
+        }]
         }]
     });
     await delay(1500);
@@ -226,8 +231,9 @@ const waitSignal = async (sid) => {
                 {"Element": "Claim", "Detail": "We believe we packed correct items", "Credibility Assessment": "Vague — 'we believe' not definitive"},
                 {"Element": "Evidence Provided", "Detail": "None", "Credibility Assessment": "No photos, no verification"},
                 {"Element": "Explanation for Error", "Detail": "None offered", "Credibility Assessment": "No account of meat items sent"},
-                {"Element": "Overall Credibility", "Detail": "LOW", "Credibility Assessment": "Vague + no evidence + 88.5% accuracy + 3 prior wrong-order disputes"}
-            ]
+                {"Element": "Overall Credibility", "Detail": "LOW", "Credibility Assessment": "Vague + no evidence + 88.5% accuracy + 3 prior wrong-order disputes"}, {
+            id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/screenshots/sf_merchant_statement.png"
+        }]
         }]
     });
     await delay(1500);
@@ -258,8 +264,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Customer Refund Rate", "Value": "4.5% (1/22 orders)"},
                 {"Field": "Prior Refund Reason", "Value": "Late delivery ($12.30)"},
                 {"Field": "90-Day Refund Total", "Value": "$12.30 (1 transaction)"},
-                {"Field": "Merchant Weekly Payout", "Value": "~$2,800"}
-            ]
+                {"Field": "Merchant Weekly Payout", "Value": "~$2,800"}, {
+            id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/screenshots/stripe_payment_002.png"
+        }]
         }]
     });
     await delay(1500);
@@ -320,7 +327,10 @@ const waitSignal = async (sid) => {
             label: "Approve Resolution",
             data: {
                 question: "Approve upholding $38.75 adjustment for Taco Fiesta? Customer Sarah Kim received entirely wrong order (3 of 4 items incorrect, vegetarian received meat - food safety concern). Customer refund rate clean at 4.5%. Merchant accuracy 88.5% (below 90% threshold) with vague statement and no evidence.",
-                options: ["Uphold Adjustment"]
+                options: [
+                    {"label": "Approve — Uphold $38.75 adjustment (customer wins)", "value": "approve_uphold", "signal": "APPROVE_UPHOLD_002"},
+                    {"label": "Reject — Reverse adjustment for merchant", "value": "reject", "signal": "REJECT_002"}
+                ]
             }
         }]
     });
@@ -342,7 +352,10 @@ const waitSignal = async (sid) => {
             label: "Approve Resolution",
             data: {
                 question: "Approve upholding $38.75 adjustment for Taco Fiesta? Customer Sarah Kim received entirely wrong order (3 of 4 items incorrect, vegetarian received meat - food safety concern). Customer refund rate clean at 4.5%. Merchant accuracy 88.5% (below 90% threshold) with vague statement and no evidence.",
-                options: ["Uphold Adjustment"]
+                options: [
+                    {"label": "Approve — Uphold $38.75 adjustment (customer wins)", "value": "approve_uphold", "signal": "APPROVE_UPHOLD_002"},
+                    {"label": "Reject — Reverse adjustment for merchant", "value": "reject", "signal": "REJECT_002"}
+                ]
             }
         }]
     });

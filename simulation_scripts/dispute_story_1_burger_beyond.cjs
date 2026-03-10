@@ -78,8 +78,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Type", "Value": "Missing Items"},
                 {"Field": "Amount", "Value": "$24.50"},
                 {"Field": "Priority", "Value": "High"},
-                {"Field": "Order ID", "Value": "UE-ORD-9947201"}
-            ]
+                {"Field": "Order ID", "Value": "UE-ORD-9947201"}, {
+            id: "s1-vid", type: "video", label: "Salesforce — Dispute Queue", videoPath: "/data/screenshots/sf_case_queue.png"
+        }]
         }]
     });
     await updateStatus(PROCESS_ID, "In Progress", "Case intake complete");
@@ -108,8 +109,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Partner Tier", "Value": "Gold", "Policy Implication": "Established, reliable partner"},
                 {"Field": "Order Accuracy Rate", "Value": "97.2%", "Policy Implication": "Above 95% threshold — highly credible"},
                 {"Field": "Prior Disputes (90 days)", "Value": "2", "Policy Implication": "Both resolved in merchant's favor"},
-                {"Field": "Account Status", "Value": "Active — Good Standing", "Policy Implication": "No flags or warnings"}
-            ]
+                {"Field": "Account Status", "Value": "Active — Good Standing", "Policy Implication": "No flags or warnings"}, {
+            id: "s2a-vid", type: "video", label: "Salesforce — Merchant Profile", videoPath: "/data/screenshots/sf_merchant_profile.png"
+        }]
         }]
     });
     await delay(1500);
@@ -136,8 +138,9 @@ const waitSignal = async (sid) => {
                 {"Item": "Classic Smash Burger", "Price": "$12.50", "Status": "Delivered"},
                 {"Item": "Truffle Fries", "Price": "$7.00", "Status": "Claimed Missing"},
                 {"Item": "Chocolate Milkshake", "Price": "$5.00", "Status": "Claimed Missing"},
-                {"Item": "Total", "Price": "$24.50", "Status": "Full refund issued"}
-            ]
+                {"Item": "Total", "Price": "$24.50", "Status": "Full refund issued"}, {
+            id: "s2b-vid", type: "video", label: "Salesforce — Order Details", videoPath: "/data/screenshots/sf_order_details.png"
+        }]
         }]
     });
     await delay(1500);
@@ -165,8 +168,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Actual Delivery", "Value": "36 min", "Assessment": "On time (1 min over — normal)"},
                 {"Field": "Route", "Value": "Direct, no deviations", "Assessment": "No tampering risk"},
                 {"Field": "Proof of Delivery", "Value": "Photo: sealed bag at door", "Assessment": "Bag sealed — items packed at restaurant"},
-                {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}
-            ]
+                {"Field": "Driver Notes", "Value": "None", "Assessment": "Uneventful delivery"}, {
+            id: "s2c-vid", type: "video", label: "Salesforce — Delivery Tracking", videoPath: "/data/screenshots/sf_delivery_tracking.png"
+        }]
         }]
     });
     await delay(1500);
@@ -195,8 +199,9 @@ const waitSignal = async (sid) => {
                 {"Metric": "Total Refunds", "Value": "12", "Threshold": "—", "Flag": "—"},
                 {"Metric": "Refund Rate", "Value": "13.8%", "Threshold": ">10% = Fraud", "Flag": "🚩 EXCEEDS — Fraud Flag"},
                 {"Metric": "'Missing Items' Refunds", "Value": "8 of 12 (66%)", "Threshold": "3+ same type = Pattern", "Flag": "🚩 Pattern Detected"},
-                {"Metric": "Refunds Last 90 Days", "Value": "5 ($156.40)", "Threshold": "3+ = Pattern Fraud", "Flag": "🚩 EXCEEDS — 5 claims"}
-            ]
+                {"Metric": "Refunds Last 90 Days", "Value": "5 ($156.40)", "Threshold": "3+ = Pattern Fraud", "Flag": "🚩 EXCEEDS — 5 claims"}, {
+            id: "s2d-vid", type: "video", label: "Salesforce — Customer History", videoPath: "/data/screenshots/sf_customer_history.png"
+        }]
         }]
     });
     await delay(1500);
@@ -223,8 +228,9 @@ const waitSignal = async (sid) => {
                 {"Element": "Claim", "Detail": "All items packed and sealed", "Credibility Assessment": "Specific, verifiable"},
                 {"Element": "Evidence Provided", "Detail": "Photo of sealed bag before driver handoff", "Credibility Assessment": "Physical evidence — high weight"},
                 {"Element": "Customer Pattern Noted", "Detail": "Multiple prior missing-item claims", "Credibility Assessment": "Corroborated by customer risk data"},
-                {"Element": "Overall Credibility", "Detail": "HIGH", "Credibility Assessment": "Specific + photo + 97.2% accuracy"}
-            ]
+                {"Element": "Overall Credibility", "Detail": "HIGH", "Credibility Assessment": "Specific + photo + 97.2% accuracy"}, {
+            id: "s2e-vid", type: "video", label: "Salesforce — Merchant Statement", videoPath: "/data/screenshots/sf_merchant_statement.png"
+        }]
         }]
     });
     await delay(1500);
@@ -255,8 +261,9 @@ const waitSignal = async (sid) => {
                 {"Field": "Customer Refund Rate", "Value": "13.8% (12/87 orders)"},
                 {"Field": "Missing Items Refunds", "Value": "8 of 12 (66%)"},
                 {"Field": "90-Day Refund Total", "Value": "$156.40 (5 transactions)"},
-                {"Field": "Merchant Weekly Payout", "Value": "~$4,200"}
-            ]
+                {"Field": "Merchant Weekly Payout", "Value": "~$4,200"}, {
+            id: "s3-vid", type: "video", label: "Stripe — Payment Verification", videoPath: "/data/screenshots/stripe_payment.png"
+        }]
         }]
     });
     await delay(1500);
@@ -316,7 +323,10 @@ const waitSignal = async (sid) => {
             label: "Approve Resolution",
             data: {
                 question: "Approve reversal of $24.50 adjustment for Burger & Beyond? Customer David Chen flagged for pattern fraud (13.8% refund rate, 8 'missing items' claims). Merchant is Gold tier with 97.2% accuracy and photo evidence.",
-                options: ["Approve Reversal"]
+                options: [
+                    {"label": "Approve — Reverse $24.50 adjustment (merchant wins)", "value": "approve_reversal", "signal": "APPROVE_REVERSAL_001"},
+                    {"label": "Reject — Keep adjustment for customer", "value": "reject", "signal": "REJECT_001"}
+                ]
             }
         }]
     });
@@ -338,7 +348,10 @@ const waitSignal = async (sid) => {
             label: "Approve Resolution",
             data: {
                 question: "Approve reversal of $24.50 adjustment for Burger & Beyond? Customer David Chen flagged for pattern fraud (13.8% refund rate, 8 'missing items' claims). Merchant is Gold tier with 97.2% accuracy and photo evidence.",
-                options: ["Approve Reversal"]
+                options: [
+                    {"label": "Approve — Reverse $24.50 adjustment (merchant wins)", "value": "approve_reversal", "signal": "APPROVE_REVERSAL_001"},
+                    {"label": "Reject — Keep adjustment for customer", "value": "reject", "signal": "REJECT_001"}
+                ]
             }
         }]
     });

@@ -23,7 +23,7 @@ if (!fs.existsSync(RECORDINGS_DIR)) fs.mkdirSync(RECORDINGS_DIR, { recursive: tr
 function parseKB() {
     const kb = fs.readFileSync(KB_PATH, 'utf8');
     
-    const sfUrlMatch = kb.match(/Salesforce Portal URL\*\*:\s*(https?:\/\/[^\s]+)/);
+    const sfUrlMatch = kb.match(/Salesforce Portal URL\*\*:\s*(https?:\/\/[^\s\x60]+)/);
     const sfCredsMatch = kb.match(/Salesforce Credentials\*\*:\s*([^\s]+)\s*\/\s*([^\s\n]+)/);
     const stripeUrlMatch = kb.match(/Stripe Portal URL\*\*:\s*(https?:\/\/[^\s]+)/);
     const stripeCredsMatch = kb.match(/Stripe Credentials\*\*:\s*([^\s]+)\s*\/\s*([^\s\n]+)/);
